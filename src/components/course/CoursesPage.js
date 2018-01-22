@@ -6,8 +6,12 @@ class CoursesPage extends React.Component {
     super(props, context);
 
     this.state = {
-      course: {title: null}
+      course: {title: ""}
     };
+
+    //ES6 binding this keyword - React does not auto bind es6 classes
+    this.onTitleChange = this.onTitleChange.bind(this);
+    this.onClickSave= this.onClickSave.bind(this);
   }
 
   onTitleChange(event) {
