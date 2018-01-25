@@ -16,7 +16,6 @@ class ManageCoursePage extends React.Component {
   render() {
     return (
       <div>
-        <h1>Manage Course</h1>
         <CourseForm
           allAuthors={[]}
           course={this.state.course}
