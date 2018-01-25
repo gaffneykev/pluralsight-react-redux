@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as courseActions from '../../actions/courseActions';
 import CourseForm from "./CourseForm";
+import toastr from  'toastr';
 
 class ManageCoursePage extends React.Component {
   constructor(props, context) {
@@ -10,7 +11,8 @@ class ManageCoursePage extends React.Component {
 
     this.state = {
       course: Object.assign({}, props.course),
-      errors: {}
+      errors: {},
+      saving: false
     };
 
     this.updateCourseState = this.updateCourseState.bind(this);
@@ -32,9 +34,17 @@ class ManageCoursePage extends React.Component {
 
   saveCourse(event) {
     event.preventDefault();
-    this.props.actions.saveCourse(this.state.course);
-    this.context.router.push('/courses');
+    this.setState({saving:true});
+    this.props.actions.saveCourse(this.state.course)
+      .then(() =>
+        this.redirect());
 
+  }
+
+  redirect(){
+    this.setState({saving:false});
+    toastr.success('Course Saved');
+    this.context.router.push('/courses');
   }
 
   render() {
@@ -46,6 +56,7 @@ class ManageCoursePage extends React.Component {
           onSave={this.saveCourse}
           course={this.state.course}
           errors={this.state.errors}
+          saving={this.state.saving}
       />
       </div>
 
@@ -61,7 +72,7 @@ ManageCoursePage.propTypes = {
 //Pull in the React Router context so router is available on this.context.router
 ManageCoursePage.contextTypes = {
   router: PropTypes.object
-}
+};
 
 function getCourseById(courses, id) {
   const course = courses.filter(course => course.id == id);
